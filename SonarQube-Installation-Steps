@@ -1,0 +1,158 @@
+SonarQube Server Integration with Jenkins Mithun Technologies - +919980923226
+
+
+             Mithun Technologies            +91-9980923226              devopstrainingblr@gmail.com
+                                                       http://mithuntechnologies.com/
+                                                       http://mithuntechnologies.co.in/ 
+
+Pre Requisite:
+
+SonarQuber Server
+Jenkins Server
+
+Step 1) Install "SonarQube Scanner"  plugin in Jenkins as follow.
+
+ 
+Step 2) Integrate SonarQube server with Jenkins  as follows.
+
+
+Manage Jenkins ---> Configure System ---> SonarQube servers
+
+
+
+
+Generate the SonarQube server authentication token 
+ 
+Login into SonarQube with Admin user.
+http://<<IP Address>>:9000/
+Default Credentials:
+User: admin
+Password: admin
+
+Click on Administration tab.
+
+
+
+
+
+Click on Tokens
+
+
+
+
+
+
+
+
+Step3) Execute the SonarQube report for Maven Java Project.
+
+Select the job , to which we need to run the sonarqube report, click on configure, in Post-build Actions options, click on Add post-build action --> Select the SonarQube report for Maven project.
+
+
+
+
+
+
+at September 30, 2019 
+Email This
+BlogThis!
+Share to Twitter
+Share to Facebook
+Share to Pinterest
+Labels: SonarQube Server
+Tuesday, August 27, 2019
+SonarQube Installation - Linux - Mithun Technologies - 9980923226
+
+Mithun Technologies            +91-9980923226              devopstrainingblr@gmail.com
+
+                                                       http://mithuntechnologies.com/
+                                                       http://mithuntechnologies.co.in/ 
+SonarQube Server Installation
+
+#!/bin/bash     
+#title                : Install SonarQube server
+#description     : Execute this script as a normal user
+#author             : Mthun Technologies
+#date                 : 08112012
+#version            : 1.0   
+#CopyRights     : Mithun Technologies
+#Contact            : 9980923226 | devopstrainingblr@gmail.com
+
+#Hardware Requirements for SonarQube
+#----------------------------------------------------
+#The SonarQube server requires at least 2GB of RAM to run efficiently and 1GB of free RAM for the OS.
+
+#Login as a root user.
+sudo su -
+
+#Download the SonarqQube Server software.
+cd /opt
+yum install wget unzip -y
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.8.zip
+unzip sonarqube-7.8.zip
+
+
+#As a good security practice, SonarQuber Server is not advised to run sonar service as a root user, so create a new user called nexus and grant sudo access to manage nexus services as follows.
+useradd sonar
+
+Give the sudo access to sonar user
+visudo
+
+sonar   ALL=(ALL)       NOPASSWD: ALL
+
+Change the owner and group permissions to /opt/sonarqube-7.8/ directory.
+chown -R sonar:sonar /opt/sonarqube-7.8/
+chmod -R 775 /opt/sonarqube-7.8/
+su - sonar
+cd /opt/sonarqube-7.8/bin/linux-x86-64/
+
+./sonar.sh start
+
+Troubleshooting
+--------------------
+
+sonar service is not starting?
+
+a)make sure you need to change the ownership and group to /opt/sonarqube-7.6/ directory for sonar user.
+b)make sure you are trying to start sonar service with sonar user.
+c)check java is installed or not using java -version command.
+
+Unable to access SonarQube server URL in browser?
+
+a)make sure port 9000 is opened in security groups - AWS ec2 instance.
+
+Create SonarQube server as a sonar service
+--------------------------------------------------------
+
+ln /opt/sonarqube-7.8/bin/linux-x86-64/sonar.sh /etc/init.d/sonar
+
+vi /etc/init.d/sonar
+
+#add below lines in /etc/init.d/sonar
+
+SONAR_HOME=/opt/sonarqube-7.8
+PLATFORM=linux-x86-64
+
+WRAPPER_CMD="${SONAR_HOME}/bin/${PLATFORM}/wrapper"
+WRAPPER_CONF="${SONAR_HOME}/conf/wrapper.conf"
+PIDDIR="/opt/sonarqube-7.8/"
+
+#Enable the sonar service
+sudo systemctl enable sonar
+
+#Start the sonar service
+sudo systemctl start sonar
+
+#Check the status of the  sonar service
+sudo systemctl status sonar
+
+
+
+
+
+
+Connect to Mithun Technologies...
+
+www.facebook.com/mithuntechnologies
+www.facebook.com/mithunsoftwaresolutions
+www.linkedin.com/in/mithuntechnologies/
